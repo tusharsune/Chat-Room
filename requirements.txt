@@ -83,7 +83,6 @@ protobuf==4.25.3
 psutil==5.9.8
 pure-eval==0.2.2
 pyarrow==15.0.2
-PyAudio==0.2.14
 pycparser==2.22
 pydeck==0.8.1b0
 Pygments==2.17.2
