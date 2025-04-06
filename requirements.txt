@@ -116,7 +116,7 @@ smmap==5.0.1
 soundfile==0.12.1
 soxr==0.3.7
 SpeechRecognition==3.14.2
-SQLAlchemy==2.0.39
+SQLAlchemy==1.4.46
 stack-data==0.6.3
 StandardScaler==0.5
 streamlit==1.32.2
