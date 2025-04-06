@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ username }}'s Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+</head>
+<body>
+    <div class="profile-container">
+        <h1>{{ username }}'s Profile</h1>
+
+        <!-- Profile Picture -->
+        <div class="profile-pic">
+            <img src="{{ url_for('static', filename='images/' + (user.profile_pic or 'default.jpg')) }}" alt="Profile Picture">
+        </div>
+
+        <!-- Edit Profile Button -->
+        <a href="{{ url_for('profile_bp.edit_profile') }}">
+            <button>Edit Profile</button>
+        </a>
+
+        <!-- Back to Chat Button -->
+        <a href="{{ url_for('home') }}">
+            <button class="back-btn">Back to Chat</button>
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    </div>
+</body>
+</html>

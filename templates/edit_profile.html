@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit_profile.css') }}">
+</head>
+<body>
+    <div class="edit-profile-container">
+        <h2>Edit Profile</h2>
+
+        <!-- Ensure form method is POST -->
+        <form action="{{ url_for('profile_bp.edit_profile') }}" method="POST" enctype="multipart/form-data">
+            <!-- CSRF Protection (if using Flask-WTF) -->
+            {% if csrf_token %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <label for="bio">Update Bio:</label>
+            <textarea id="bio" name="bio">{{ user.bio }}</textarea>
+
+            <label for="profile_pic">Change Profile Picture:</label>
+            <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
+
+            <button type="submit">Save Changes</button>
+        </form>
+
+        <a href="{{ url_for('profile_bp.profile') }}">Back to Profile</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,340 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #ffffff;
+    overflow-x: hidden;
+    height: 100vh;
+    transition: background 0.5s ease-in-out;
+}
+
+/* Room Container */
+.room-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    padding-top: 50px;
+    animation: fadeIn 2s ease-out;
+}
+
+/* Room Styling */
+.room {
+    width: 90%;
+    max-width: 1300px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    animation: roomEnter 1s ease-out;
+}
+
+/* Welcome Text */
+.welcome-message {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 10px 0;
+    color: #dce3f2;
+    box-shadow: 4px 4px 4px black;
+}
+
+/* Room List */
+.room-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin-top: 30px;
+}
+
+/* Individual Room Links */
+.room-list a {
+    position: relative;
+    width: 28%;
+    min-width: 260px;
+    text-align: center;
+    padding: 30px;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: bold;
+    background-blend-mode: overlay;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+    backdrop-filter: brightness(0.8);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Dark overlay inside each room link */
+.room-list a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4); /* adjust opacity if needed */
+    border-radius: 15px;
+    z-index: 0;
+}
+
+/* Make text sit above overlay */
+.room-list a span {
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 0 5px rgba(0,0,0,0.7);
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+/* Room Background Images */
+.room-list a:nth-child(1) { background: url('/static/images/tech.jpg') center/cover no-repeat; }
+.room-list a:nth-child(2) { background: url('/static/images/gaming.jpg') top/cover no-repeat; }
+.room-list a:nth-child(3) { background: url('/static/images/social.jpg') center/cover no-repeat; }
+.room-list a:nth-child(4) { background: url('/static/images/educational1.jpg') center/cover no-repeat; }
+.room-list a:nth-child(5) { background: url('/static/images/special.jpg') center/cover no-repeat; }
+.room-list a:nth-child(6) { background: url('/static/images/fun2.jpg') top/cover no-repeat; }
+.room-list a:nth-child(7) { background: url('/static/images/entertainment.jpg') center/cover no-repeat; }
+.room-list a:nth-child(8) { background: url('/static/images/general.jpg') center/cover no-repeat; }
+.room-list a:nth-child(9) { background: url('/static/images/serious.jpg') center/cover no-repeat; }
+.room-list a:nth-child(10) { background: url('/static/images/health.jpg') center/cover no-repeat; }
+.room-list a:nth-child(11) { background: url('/static/images/travel.jpg') center/cover no-repeat; }
+.room-list a:nth-child(12) { background: url('/static/images/mystery.jpg') center/cover no-repeat; }
+
+/* Hover Effects */
+.room-list a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 30px rgba(255, 255, 255, 0.25);
+}
+
+/* Logout Button */
+.logout-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(255, 76, 76, 0.8);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 18px;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(255, 76, 76, 0.5);
+    transition: background 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #ff2e2e;
+}
+
+/* Profile Picture Styling */
+.profile-corner {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.08);
+    padding: 6px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    transition: transform 0.2s ease-in-out;
+}
+
+.profile-corner img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid white;
+    object-fit: cover;
+}
+
+.profile-corner:hover {
+    transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes roomEnter {
+    0% { transform: scale(0.95); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .room-list {
+        justify-content: center;
+    }
+
+    .room-list a {
+        width: 45%;
+    }
+
+    .profile-corner img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .room-list a {
+        width: 90%;
+    }
+
+    .profile-corner img {
+        width: 45px;
+        height: 45px;
+    }
+}
+/* More Rooms Overlay Section */
+.overlay-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* Viewport height - no scrolling */
+    background: linear-gradient(135deg, #1e2a47, #3a537d); /* same as main */
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    padding: 20px;
+}
+
+.overlay-section:target {
+    display: flex;
+    animation: fadeIn 1s ease-out;
+}
+
+/* Back to Top Arrow */
+.back-to-top-arrow {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 20px;
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 10px 15px;
+    border-radius: 50%;
+    box-shadow: 10px 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.back-to-top-arrow:hover {
+    transform: scale(.8);
+}
+
+/* Reuse existing extra room styles */
+.extra-rooms {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+}
+
+.extra-rooms a {
+    position: relative;
+    width: 28%;
+    min-width: 260px;
+    text-align: center;
+    padding: 30px;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: bold;
+    background: linear-gradient(to bottom right, #444c66, #556084);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 25px;
+}
+
+.extra-rooms a span {
+    position: relative;
+    z-index: 1;
+    padding: 6px 12px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
+}
+
+.extra-rooms a:hover {
+    transform: scale(1.03);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .extra-rooms a {
+        width: 45%;
+    }
+}
+
+@media (max-width: 480px) {
+    .extra-rooms a {
+        width: 90%;
+    }
+}
+/* 🎨 Stylish More Rooms Button */
+.more-rooms-button {
+    display: inline-block;
+    margin: 30px auto 10px;
+    padding: 14px 34px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffffff;
+    background: linear-gradient(135deg, #5f72be, #9b23ea);
+    border: none;
+    border-radius: 14px;
+    text-decoration: none;
+    box-shadow: 0 4px 25px rgba(155, 35, 234, 0.4);
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.more-rooms-button:hover {
+    background: linear-gradient(135deg, #9b23ea, #5f72be);
+    transform: scale(1.08);
+    box-shadow: 0 6px 30px rgba(155, 35, 234, 0.6);
+}
+
+/* 🔼 Enlarged & Styled Up Arrow */
+/* .back-to-top-arrow {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 32px;
+    text-decoration: none;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 10px 14px;
+    border-radius: 50%;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease-in-out, background 0.3s ease;
+}
+
+.back-to-top-arrow:hover {
+    transform: scale(1.2);
+    background: rgba(255, 255, 255, 0.25);
+} */

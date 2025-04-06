@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ room }} - Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+</head>
+
+<body>
+    <div class="chat-container">
+        <!-- Welcome Section -->
+        <div class="welcome-message">
+            <h2>Welcome to the {{ room }} Room, {{ username }}!</h2>
+        </div>
+
+        <!-- Room Info -->
+        <div class="room-info">
+            <p>You're chatting in the <strong>{{ room }}</strong> room.</p>
+        </div>
+
+        <!-- Chat Box -->
+        <div id="messages" class="chat-box">
+            {% for message in messages|reverse %}
+            <div class="message">
+                <div class="message-content">
+                    <p>
+                        <a href="{{ url_for('mini_profile', username=message.user.username , room=room) }}" class="username-link">
+                            <span class="user">{{ message.user.username }}</span>
+                        </a>: {{ message.content }}
+                    </p>
+                    <small>{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                </div>
+
+                {% if message.user_id == current_user.id %}
+                <div class="dropdown-container">
+                    <div class="three-dot-wrapper">
+                        <span class="three-dot-icon">⋮</span>
+                        <div class="dropdown-options">
+                            <form action="{{ url_for('delete_message', message_id=message.id, room=room) }}" method="POST">
+                                <button type="submit">Delete</button>
+                            </form>
+                            <form>
+                                <button type="button" disabled>Edit</button>
+                            </form>
+                            <form>
+                                <button type="button" disabled>Report</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Message Input -->
+        <form id="chat-form" method="POST" class="chat-input-container">
+            <input type="text" id="message-input" name="message" placeholder="Type your message..." required>
+            <button type="submit">Send</button>
+        </form>
+        
+        <!-- Back to Home Button (Bottom Right) -->
+        <a href="{{ url_for('home') }}" class="back-home">🏠 Back to Home</a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }}'s Mini Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+</head>
+<body>
+    <div class="mini-profile-container">
+        <div class="mini-profile-card">
+            <img src="{{ url_for('static', filename='images/' + (user.profile_pic or 'default.jpg')) }}" alt="Profile Picture" class="mini-profile-pic">
+            <h2>{{ user.username }}</h2>
+            <p class="mini-bio">{{ user.bio or "No bio provided." }}</p>
+            <a href="{{ url_for('chat', room=room) }}" class="back-home">⬅ Back to Chat</a>
+
+        </div>
+    </div>
+</body>
+</html>

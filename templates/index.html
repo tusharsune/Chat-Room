@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Chat App</title>
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+
+<body>
+    <div id="top"></div>
+
+    <div class="header">
+        <!-- Profile Picture in the Top Right Corner -->
+        <!-- Profile Picture in the Top Right Corner -->
+        <div class="profile-corner">
+            <a href="{{ url_for('profile_bp.profile') }}">
+                <img src="{{ url_for('static', filename='images/' + (user.profile_pic or 'default.jpg') ) }}"
+                    alt="Profile Picture">
+            </a>
+        </div>
+
+
+        <div class="room-container">
+            <h2 class="welcome-message">Welcome, {{ username }}!</h2>
+            <p class="welcome-message">Choose a room to join:</p>
+
+            <div class="room-list">
+                <a href="{{ url_for('chat', room='Tech') }}" class="room"><span>Tech Room</span></a>
+                <a href="{{ url_for('chat', room='Gaming') }}" class="room"><span>Gaming</span></a>
+                <a href="{{ url_for('chat', room='Social') }}" class="room"><span>Social</span></a>
+                <a href="{{ url_for('chat', room='Educational') }}" class="room"><span>Educational</span></a>
+                <a href="{{ url_for('chat', room='Special Interest') }}" class="room"><span>Special Interest</span></a>
+                <a href="{{ url_for('chat', room='Fun') }}" class="room"><span>Fun</span></a>
+                <a href="{{ url_for('chat', room='Entertainment') }}" class="room"><span>Entertainment</span></a>
+                <a href="{{ url_for('chat', room='General') }}" class="room"><span>General</span></a>
+                <a href="{{ url_for('chat', room='Serious Discussion') }}" class="room"><span>Serious
+                        Discussion</span></a>
+                <a href="{{ url_for('chat', room='Health') }}" class="room"><span>Health</span></a>
+                <a href="{{ url_for('chat', room='Travelers') }}" class="room"><span>Travelers</span></a>
+                <a href="{{ url_for('chat', room='Mystery') }}" class="room"><span>Mystery</span></a>
+            </div>
+
+
+            <a href="#more-rooms" class="more-rooms-button">▼ More Rooms</a>
+
+            <div id="more-rooms" class="overlay-section">
+                <a href="#top" class="back-to-top-arrow">▲</a>
+
+                <div class="extra-rooms">
+                    <a href="{{ url_for('chat', room='Books') }}"><span>Books</span></a>
+                    <a href="{{ url_for('chat', room='Foodies') }}"><span>Foodies</span></a>
+                    <a href="{{ url_for('chat', room='Coding') }}"><span>Coding</span></a>
+                    <a href="{{ url_for('chat', room='Memes') }}"><span>Memes</span></a>
+                    <a href="{{ url_for('chat', room='Anime') }}"><span>Anime</span></a>
+                    <a href="{{ url_for('chat', room='Music') }}"><span>Music</span></a>
+                    <a href="{{ url_for('chat', room='Photography') }}"><span>Photography</span></a>
+                    <a href="{{ url_for('chat', room='History') }}"><span>History</span></a>
+                    <a href="{{ url_for('chat', room='Nature') }}"><span>Nature</span></a>
+                    <a href="{{ url_for('chat', room='Finance') }}"><span>Finance</span></a>
+                    <a href="{{ url_for('chat', room='Fitness') }}"><span>Fitness</span></a>
+                    <a href="{{ url_for('chat', room='Pets') }}"><span>Pets</span></a>
+                </div>
+            </div>
+
+
+
+
+            <!-- <p class="logout-btn"><a href="{{ url_for('logout') }}">Logout</a></p> -->
+        </div>
+</body>
+
+</html>
