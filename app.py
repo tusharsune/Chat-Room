@@ -113,4 +113,4 @@ app.register_blueprint(profile_bp, url_prefix="/profile")
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Ensure database tables are created
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=8000)
