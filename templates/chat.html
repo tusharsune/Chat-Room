@@ -62,7 +62,7 @@
             <button type="submit">Send</button>
         </form>
 
-        <!-- Back to Home Button (Bottom Right) -->
+        <!-- Back to Home Button -->
         <a href="{{ url_for('home') }}" class="back-home">🏠 Back to Home</a>
     </div>
 
@@ -85,24 +85,18 @@
                     username,
                     room,
                     message
-                }, (ack) => {
-                    if (!ack.success) {
-                        alert("Message failed to send.");
-                    }
                 });
-                console.log("Sending message:", message);
                 messageInput.value = "";
             }
         });
 
         socket.on("receive_message", function(data) {
-            console.log("Message received:", data);
             const messageDiv = document.createElement("div");
             messageDiv.classList.add("message");
             messageDiv.innerHTML = `
                 <div class="message-content">
                     <p><span class="user">${data.username}</span>: ${data.message}</p>
-                    <small>${data.timestamp || 'Just now'}</small>
+                    <small>${data.timestamp}</small>
                 </div>
             `;
             messagesBox.appendChild(messageDiv);
