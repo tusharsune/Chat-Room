@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ room }} - Chat</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 
 <body>
@@ -54,16 +55,54 @@
             </div>
             {% endfor %}
         </div>
-        
+
         <!-- Message Input -->
-        <form id="chat-form" method="POST" class="chat-input-container">
+        <form id="chat-form" class="chat-input-container">
             <input type="text" id="message-input" name="message" placeholder="Type your message..." required>
             <button type="submit">Send</button>
         </form>
-        
+
         <!-- Back to Home Button (Bottom Right) -->
         <a href="{{ url_for('home') }}" class="back-home">🏠 Back to Home</a>
     </div>
+
+    <script>
+        const socket = io();
+        const room = "{{ room }}";
+        const username = "{{ username }}";
+
+        socket.emit("join", { username, room });
+
+        const chatForm = document.getElementById("chat-form");
+        const messageInput = document.getElementById("message-input");
+        const messagesBox = document.getElementById("messages");
+
+        chatForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const message = messageInput.value;
+            if (message.trim() !== "") {
+                socket.emit("send_message", {
+                    username,
+                    room,
+                    message
+                });
+                messageInput.value = "";
+            }
+        });
+
+        socket.on("receive_message", function(data) {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <p><span class="user">${data.username}</span>: ${data.message}</p>
+                    <small>Just now</small>
+                </div>
+            `;
+            messagesBox.appendChild(messageDiv);
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+        });
+    </script>
 </body>
 
 </html>
