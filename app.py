@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-import datetime
-from database import db, User, Message  
-from profile_1 import profile_bp  
+from datetime import datetime
 from flask_socketio import SocketIO, emit, join_room
+from database import db, User, Message
+from profile_1 import profile_bp
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Tushu'
@@ -26,7 +26,7 @@ def load_user(user_id):
 @app.route('/')
 @login_required
 def home():
-    user = User.query.filter_by(username=current_user.username).first()  
+    user = User.query.filter_by(username=current_user.username).first()
     return render_template('index.html', user=user, username=current_user.username)
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -34,10 +34,10 @@ def signup():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        hashed_password = generate_password_hash(password)
 
         if User.query.filter_by(username=username).first():
-            return "Username already exists. Try another one!"
+            return "Username already exists!"
 
         new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
@@ -54,7 +54,7 @@ def login():
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.password, password):
-            login_user(user)  
+            login_user(user)
             return redirect(url_for('home'))
         else:
             return "Invalid credentials!"
@@ -67,7 +67,7 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/chat/<room>', methods=['GET'])
+@app.route('/chat/<room>')
 @login_required
 def chat(room):
     messages = Message.query.filter_by(room=room).order_by(Message.timestamp).all()
@@ -77,10 +77,8 @@ def chat(room):
 @login_required
 def delete_message(message_id, room):
     message = Message.query.get_or_404(message_id)
-
     if message.user_id != current_user.id:
-        return "You are not allowed to delete this message!", 403
-
+        return "Not allowed", 403
     db.session.delete(message)
     db.session.commit()
     return redirect(url_for('chat', room=room))
@@ -93,29 +91,24 @@ def mini_profile(username, room):
 @socketio.on('send_message')
 def handle_send_message(data):
     room = data['room']
-    message = data['message']
+    message_text = data['message']
     username = data['username']
 
     user = User.query.filter_by(username=username).first()
     if user:
-        new_message = Message(user_id=user.id, room=room, content=message)
-        db.session.add(new_message)
+        msg = Message(user_id=user.id, room=room, content=message_text)
+        db.session.add(msg)
         db.session.commit()
 
         emit('receive_message', {
             'username': username,
-            'message': message,
-            'timestamp': new_message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+            'message': message_text,
+            'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S')
         }, room=room)
-        return {'success': True}
-    return {'success': False}
 
 @socketio.on('join')
-def on_join(data):
-    username = data['username']
-    room = data['room']
-    join_room(room)
-    emit('user_joined', {'username': username}, room=room)
+def handle_join(data):
+    join_room(data['room'])
 
 app.register_blueprint(profile_bp, url_prefix="/profile")
 
