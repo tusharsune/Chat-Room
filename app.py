@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
-from flask_socketio import SocketIO, emit, join_room
+import datetime
 from database import db, User, Message
 from profile_1 import profile_bp
+from flask_socketio import SocketIO, emit, join_room
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Tushu'
@@ -34,10 +34,10 @@ def signup():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        hashed_password = generate_password_hash(password)
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
 
         if User.query.filter_by(username=username).first():
-            return "Username already exists!"
+            return "Username already exists. Try another one!"
 
         new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
@@ -67,7 +67,7 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/chat/<room>')
+@app.route('/chat/<room>', methods=['GET'])
 @login_required
 def chat(room):
     messages = Message.query.filter_by(room=room).order_by(Message.timestamp).all()
@@ -78,7 +78,7 @@ def chat(room):
 def delete_message(message_id, room):
     message = Message.query.get_or_404(message_id)
     if message.user_id != current_user.id:
-        return "Not allowed", 403
+        return "You are not allowed to delete this message!", 403
     db.session.delete(message)
     db.session.commit()
     return redirect(url_for('chat', room=room))
@@ -91,24 +91,27 @@ def mini_profile(username, room):
 @socketio.on('send_message')
 def handle_send_message(data):
     room = data['room']
-    message_text = data['message']
+    message = data['message']
     username = data['username']
 
     user = User.query.filter_by(username=username).first()
     if user:
-        msg = Message(user_id=user.id, room=room, content=message_text)
-        db.session.add(msg)
+        new_message = Message(user_id=user.id, room=room, content=message)
+        db.session.add(new_message)
         db.session.commit()
 
         emit('receive_message', {
             'username': username,
-            'message': message_text,
-            'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+            'message': message,
+            'timestamp': new_message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
         }, room=room)
 
 @socketio.on('join')
-def handle_join(data):
-    join_room(data['room'])
+def on_join(data):
+    username = data['username']
+    room = data['room']
+    join_room(room)
+    emit('user_joined', {'username': username}, room=room)
 
 app.register_blueprint(profile_bp, url_prefix="/profile")
 
