@@ -1,3 +1,6 @@
+import eventlet
+eventlet.monkey_patch()  # ✅ this must be first!
+
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -6,7 +9,7 @@ from database import db, User, Message
 from profile_1 import profile_bp
 from flask_socketio import SocketIO, emit, join_room
 import os
-import eventlet
+
 
 eventlet.monkey_patch()  # Required for socket.io to work correctly with eventlet
 
