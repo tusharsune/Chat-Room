@@ -9,7 +9,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
-    # Relationship: One user can have many messages
+    # One user can have many messages
     messages = db.relationship('Message', backref='user', lazy=True)
 
     def __repr__(self):
