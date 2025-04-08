@@ -1,10 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-import datetime
+from datetime import datetime
 from database import db, User, Message
 from profile_1 import profile_bp
 from flask_socketio import SocketIO, emit, join_room
+import os
+import eventlet
+
+eventlet.monkey_patch()  # Required for socket.io to work correctly with eventlet
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Tushu'
@@ -17,7 +21,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='eventlet')  # important to use eventlet mode
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -77,8 +81,10 @@ def chat(room):
 @login_required
 def delete_message(message_id, room):
     message = Message.query.get_or_404(message_id)
+
     if message.user_id != current_user.id:
         return "You are not allowed to delete this message!", 403
+
     db.session.delete(message)
     db.session.commit()
     return redirect(url_for('chat', room=room))
@@ -87,6 +93,16 @@ def delete_message(message_id, room):
 def mini_profile(username, room):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('mini_profile.html', user=user, room=room)
+
+# ========== SocketIO EVENTS ==========
+
+@socketio.on('join')
+def on_join(data):
+    username = data['username']
+    room = data['room']
+    join_room(room)
+    print(f"{username} joined room {room}")
+    emit('user_joined', {'username': username}, room=room)
 
 @socketio.on('send_message')
 def handle_send_message(data):
@@ -99,23 +115,24 @@ def handle_send_message(data):
         new_message = Message(user_id=user.id, room=room, content=message)
         db.session.add(new_message)
         db.session.commit()
+        print(f"Message from {username} in room {room}: {message}")
 
         emit('receive_message', {
             'username': username,
             'message': message,
-            'timestamp': new_message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+            'timestamp': new_message.timestamp.strftime('%H:%M')
         }, room=room)
+    else:
+        print("User not found for message sending")
 
-@socketio.on('join')
-def on_join(data):
-    username = data['username']
-    room = data['room']
-    join_room(room)
-    emit('user_joined', {'username': username}, room=room)
+# ========== App Init for Railway ==========
 
 app.register_blueprint(profile_bp, url_prefix="/profile")
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    socketio.run(app, host="0.0.0.0", port=8000, debug=True)
+
+    # Railway gives dynamic PORT via environment variable
+    port = int(os.environ.get('PORT', 8000))
+    socketio.run(app, host="0.0.0.0", port=port)
