@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
-from database import db, User, Message
-from profile_1 import profile_bp
+import datetime
+from database import db, User, Message  
+from profile_1 import profile_bp  
 from flask_socketio import SocketIO, emit, join_room
 
 app = Flask(__name__)
@@ -26,7 +26,7 @@ def load_user(user_id):
 @app.route('/')
 @login_required
 def home():
-    user = User.query.filter_by(username=current_user.username).first()
+    user = User.query.filter_by(username=current_user.username).first()  
     return render_template('index.html', user=user, username=current_user.username)
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -54,7 +54,7 @@ def login():
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.password, password):
-            login_user(user)
+            login_user(user)  
             return redirect(url_for('home'))
         else:
             return "Invalid credentials!"
@@ -90,16 +90,6 @@ def mini_profile(username, room):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('mini_profile.html', user=user, room=room)
 
-# ========== SocketIO EVENTS ==========
-
-@socketio.on('join')
-def on_join(data):
-    username = data['username']
-    room = data['room']
-    join_room(room)
-    print(f"{username} joined room {room}")
-    emit('user_joined', {'username': username}, room=room)
-
 @socketio.on('send_message')
 def handle_send_message(data):
     room = data['room']
@@ -111,17 +101,21 @@ def handle_send_message(data):
         new_message = Message(user_id=user.id, room=room, content=message)
         db.session.add(new_message)
         db.session.commit()
-        print(f"Message from {username} in room {room}: {message}")
 
         emit('receive_message', {
             'username': username,
             'message': message,
-            'timestamp': new_message.timestamp.strftime('%H:%M')
+            'timestamp': new_message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
         }, room=room)
-    else:
-        print("User not found for message sending")
+        return {'success': True}
+    return {'success': False}
 
-# ========== App Init ==========
+@socketio.on('join')
+def on_join(data):
+    username = data['username']
+    room = data['room']
+    join_room(room)
+    emit('user_joined', {'username': username}, room=room)
 
 app.register_blueprint(profile_bp, url_prefix="/profile")
 
