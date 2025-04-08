@@ -85,18 +85,24 @@
                     username,
                     room,
                     message
+                }, (ack) => {
+                    if (!ack.success) {
+                        alert("Message failed to send.");
+                    }
                 });
+                console.log("Sending message:", message);
                 messageInput.value = "";
             }
         });
 
         socket.on("receive_message", function(data) {
+            console.log("Message received:", data);
             const messageDiv = document.createElement("div");
             messageDiv.classList.add("message");
             messageDiv.innerHTML = `
                 <div class="message-content">
                     <p><span class="user">${data.username}</span>: ${data.message}</p>
-                    <small>Just now</small>
+                    <small>${data.timestamp || 'Just now'}</small>
                 </div>
             `;
             messagesBox.appendChild(messageDiv);
