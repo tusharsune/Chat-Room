@@ -26,9 +26,9 @@ body {
 }
 
 /* When hovering over the login container, change its position */
-.login-container:hover {
+/* .login-container:hover {
     transform: translateY(-30px) translateX(-30px); /* Move the container up and to the left */
-}
+/* } */
 
 /* Login Box */
 .login-box {
