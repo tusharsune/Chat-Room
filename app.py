@@ -4,8 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_socketio import SocketIO, join_room, emit
 from database import db, User, Message
 from profile_1 import profile_bp
-import eventlet
-eventlet.monkey_patch()
+
 
 
 app = Flask(__name__)
