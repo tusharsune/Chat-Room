@@ -1,11 +1,10 @@
-/* General Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Body */
+
 body {
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -113,6 +112,20 @@ body {
 .room-list a:nth-child(10) { background: url('/static/images/health.jpg') center/cover no-repeat; }
 .room-list a:nth-child(11) { background: url('/static/images/travel.jpg') center/cover no-repeat; }
 .room-list a:nth-child(12) { background: url('/static/images/mystery.jpg') center/cover no-repeat; }
+
+/*extra rooms bg */
+.extra-rooms a:nth-child(1) { background: url('/static/images/books.jpeg') bottom/cover no-repeat; }
+.extra-rooms a:nth-child(2) { background: url('/static/images/foodies.jpeg') center/cover no-repeat; }
+.extra-rooms a:nth-child(3) { background: url('/static/images/coding.jpeg') center/cover no-repeat; }
+.extra-rooms a:nth-child(4) { background: url('/static/images/memes.jpeg') center/cover no-repeat; }
+.extra-rooms a:nth-child(5) { background: url('/static/images/anime.jpeg') top/cover no-repeat; }
+.extra-rooms a:nth-child(6) { background: url('/static/images/music.jpeg') center/cover no-repeat; }
+.extra-rooms a:nth-child(7) { background: url('/static/images/photography.jpeg') center/cover no-repeat; }
+.extra-rooms a:nth-child(8) { background: url('/static/images/History.jpeg') center/cover no-repeat; }
+.extra-rooms a:nth-child(9) { background: url('/static/images/nature1.jpeg') center/cover no-repeat; }
+.extra-rooms a:nth-child(10) { background: url('/static/images/finance.jpeg') center/cover no-repeat; }
+.extra-rooms a:nth-child(11) { background: url('/static/images/fitness.jpeg') center/cover no-repeat; }
+.extra-rooms a:nth-child(12) { background: url('/static/images/pets.jpeg') center/cover no-repeat; }
 
 /* Hover Effects */
 .room-list a:hover {
